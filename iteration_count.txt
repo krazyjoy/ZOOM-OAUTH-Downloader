@@ -1,0 +1,44 @@
+# calculate the correct rounds:
+
+<Zoom_API_Get_Dates Collection>
+- GMT_start = new Date("2022/07/1")
+- GMT_end = new Date("2023/06/08")
+
+
+environment variable: 
+- date_arr = "["2022-06-30","2022-07-30","2022-08-29","2022-09-28","2022-10-28","2022-11-27","2022-12-27","2023-01-26","2023-02-25","2023-03-27","2023-04-26","2023-05-26","2023-06-07"]"
+- users_num = 27
+- user_index = you can decide who to start with  (check users_records)
+
+iteration_count = len(date_arr) * (users_num - user_index) = 13 * (27 - 3) = 312
+
+
+
+==================================================
+1: "hr_zoom@tomofun.com",
+2: "pm@tomofun.com",
+3: "cammy@tomofun.com",
+4: "it@tomofun.com",
+5: "hr@tomofun.com",
+6: ai_comp2021@tomofun.com",
+7: "claire@tomofun.com",
+8: "maggie@tomofun.com",
+9: "phoebe@tomofun.com",
+10: "eu_team@tomofun.com",
+11: "zoe@tomofun.com",
+12: "nobel@tomofun.com",
+13: "careers.ph@tomofun.com",
+14: "jp_team@tomofun.com",
+15: "bonniechieh@gmail.com",
+16: "support@tomofun.com",
+17: "tina@tomofun.com",
+18: "pai@tomofun.com",
+19: "connie@tomofun.com",
+20: "it_nYr2_a6UQf-KgXOgEJC_xg@tomofun.com",
+21: "it_xIV7r-ZBQjKwntnAb-Xw-Q@tomofun.com",
+22: "rooms_Gm-YB4KkSgmQlewn45SHGA@tomofun.com",
+23: "rooms_O9M7TuCWSGCDyP3XMbAnyg@tomofun.com",
+24: "rooms_OoF6Kl4dR3uflZJcsc8zsg@tomofun.com",
+25: "rooms_v_f516YwS2e0mV02o-a6mg@tomofun.com",
+26: "rooms_y30wKjFgT-2CK9yKl3TGTw@tomofun.com",
+27: "rooms_ZU986YdwTBmCMUOSNvmgpQ@tomofun.com"
