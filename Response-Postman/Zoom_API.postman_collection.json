@@ -1,0 +1,590 @@
+{
+	"info": {
+		"_postman_id": "39d6817f-2747-4dff-a743-8a17683312a8",
+		"name": "Zoom API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21305181"
+	},
+	"item": [
+		{
+			"name": "Zoom Recordings",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log('-----------Pre-request-------------')",
+							"",
+							"function *date_iterator(start, end, delta){",
+							"    var next_date = start; // long int",
+							"    var end_date = end",
+							"    while(next_date < end_date){",
+							"",
+							"        var tmp_date = next_date.setDate(next_date.getDate() + delta) // long int",
+							"        tmp_date = Math.min(tmp_date, end_date)",
+							"        console.log('tmp date', tmp_date)",
+							"        next_date = new Date(tmp_date) // GMT date",
+							"",
+							"        yield next_date",
+							"    }",
+							"}",
+							"",
+							"function time_process(GMT_time){",
+							"    Long_time = GMT_time.setDate(GMT_time.getDate())",
+							"    ISO_time = GMT_time.toISOString().split('T')[0]",
+							"    // console.log(Long_time) // 1640966400000",
+							"    // console.log(ISO_time) // \"2021-12-31\"",
+							"    return Long_time, ISO_time",
+							"}",
+							"",
+							"// 設置權域變數 users_num ",
+							"let emails = JSON.parse(pm.environment.get('emails'))",
+							"let num_of_users = emails.length",
+							"pm.environment.set('users_num', num_of_users)",
+							"",
+							"// get environment variables",
+							"// https://kuancat.medium.com/用-postman-做-loop-request-f5f51d63b7f1",
+							"let user_idx = pm.environment.get('user_index')",
+							"console.log('find user-idx')",
+							"console.log(pm.environment.get('user_index'))",
+							"",
+							"",
+							"",
+							"console.log('email', emails[user_idx])",
+							"let email = emails[user_idx]",
+							"let date_idx = Number(pm.environment.get('date_index'))",
+							"",
+							"let date_list = JSON.parse(pm.environment.get('date_arr'))",
+							"console.log('date_list', date_list)",
+							"console.log('date_idx',date_idx)",
+							"if (date_idx + 1 < date_list.length){",
+							"    from = date_list[date_idx]",
+							"    to = date_list[date_idx + 1]",
+							"    console.log('from', from)",
+							"    console.log('to', to)",
+							"    ",
+							"",
+							"    pm.collectionVariables.set('email_', email)",
+							"    pm.collectionVariables.set('from_date_',from)",
+							"    pm.collectionVariables.set('to_date_',to)",
+							"}",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"console.log('--------------Tests-------------')",
+							"",
+							"let num_of_users = pm.environment.get('users_num')",
+							"let user_idx = pm.environment.get('user_index')",
+							"",
+							"let date_list = JSON.parse(pm.environment.get('date_arr'))",
+							"// let date_list = pm.environment.get('date_arr')",
+							"let date_idx = pm.environment.get('date_index')",
+							"",
+							"console.log('date_list.length', date_list.length)",
+							"console.log('date idx', date_idx)",
+							"",
+							"if (date_idx + 1 < date_list.length){",
+							"    pm.environment.set('date_index', Number(date_idx) + 1)",
+							"    console.log(\"next date\", pm.environment.get('date_index'))",
+							"",
+							"}",
+							"else{",
+							"    pm.environment.set('date_index', 0)",
+							"    if (num_of_users > user_idx){",
+							"    ",
+							"        pm.environment.set('user_index', Number(user_idx)+1)",
+							"        console.log(\"user add 1\", pm.environment.get('user_index'))",
+							"",
+							"    }",
+							"}",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.zoom.us/v2/users/{{email_}}/recordings?userId={{email_}}&page_size=300&from={{from_date_}}&to={{to_date_}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"zoom",
+						"us"
+					],
+					"path": [
+						"v2",
+						"users",
+						"{{email_}}",
+						"recordings"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{email_}}"
+						},
+						{
+							"key": "page_size",
+							"value": "300"
+						},
+						{
+							"key": "from",
+							"value": "{{from_date_}}"
+						},
+						{
+							"key": "to",
+							"value": "{{to_date_}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Request: Open Minded Recordings",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.zoom.us/v2/users/rooms_Gm-YB4KkSgmQlewn45SHGA@tomofun.com/recordings?userId=rooms_Gm-YB4KkSgmQlewn45SHGA@tomofun.com&page_size=300&from=2021-12-01&to=2022-06-30",
+							"protocol": "https",
+							"host": [
+								"api",
+								"zoom",
+								"us"
+							],
+							"path": [
+								"v2",
+								"users",
+								"rooms_Gm-YB4KkSgmQlewn45SHGA@tomofun.com",
+								"recordings"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "rooms_Gm-YB4KkSgmQlewn45SHGA@tomofun.com"
+								},
+								{
+									"key": "page_size",
+									"value": "300"
+								},
+								{
+									"key": "from",
+									"value": "2021-12-01"
+								},
+								{
+									"key": "to",
+									"value": "2022-06-30"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 31 May 2023 02:52:54 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16483"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "x-zm-trackingid",
+							"value": "v=2.0;clid=us02;rid=WEB_f8485831a50e4e06a2f7e42dafc7dd97"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, must-revalidate, no-transform"
+						},
+						{
+							"key": "pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "expires",
+							"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_aid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_haid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_tmaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_htmaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "cred=4DD56A2B4C392C47C449D5EF33765081; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "_zm_ctaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "_zm_chtaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "TS01f92dc5=018e272f72ac4ca05f5186f6ea9c3b1f71d13ced014d733018e47fce8da06537a71e8aa3efab28bc4c9757ccad0df61353f70c53bf; Path=/; Secure; HttpOnly; SameSite=Strict;"
+						},
+						{
+							"key": "set-cookie",
+							"value": "TS018dd1ba=018e272f72ac4ca05f5186f6ea9c3b1f71d13ced014d733018e47fce8da06537a71e8aa3efab28bc4c9757ccad0df61353f70c53bf; path=/; domain=.zoom.us"
+						},
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "x-ratelimit-category",
+							"value": "Medium"
+						},
+						{
+							"key": "x-zm-zoneid",
+							"value": "VA"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "referrer-policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "CF-Cache-Status",
+							"value": "DYNAMIC"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=ViVzH39V1c7INc6BHJojdNIjhuvOdQ7ogvlESnVV6J3xWClu%2BK4LJt3Pa4LZUlGmvR%2FvEvV%2BdbpVSaFK8WHOkgYCjiIByS6XYcrZakXHj5SQaO7nSdRlBV%2Fb4Hhf\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7cfbec67fae5242d-IAD"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"from\": \"2022-05-30\",\n    \"to\": \"2022-06-30\",\n    \"page_count\": 1,\n    \"page_size\": 300,\n    \"total_records\": 8,\n    \"next_page_token\": \"\",\n    \"meetings\": [\n        {\n            \"uuid\": \"4FScFDP+T0KHJCVxdqaW8g==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-28T05:54:44Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 153,\n            \"total_size\": 735800119,\n            \"recording_count\": 3,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/12Omyrujjhw35TLQwCW1wcNfbj1TTCMM96w9vOwy91CgViahvZ_Ep4Ojt7E6kYCI.b6nzlzWUyS8hJ2OF\",\n            \"recording_files\": [\n                {\n                    \"id\": \"0a48588b-b226-4dab-98aa-318c353221b1\",\n                    \"meeting_id\": \"4FScFDP+T0KHJCVxdqaW8g==\",\n                    \"recording_start\": \"2022-06-28T06:00:49Z\",\n                    \"recording_end\": \"2022-06-28T08:34:46Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 146978953,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/K-q2K9m8J2MOqW1ZReaCHy5IOB_RJKJtyQUa5ltbTHZ1mha2odkmns8DpW7_vtkO1j6YcnUBgO2nWHDy.WmW09YBEs9hP-RbJ\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/K-q2K9m8J2MOqW1ZReaCHy5IOB_RJKJtyQUa5ltbTHZ1mha2odkmns8DpW7_vtkO1j6YcnUBgO2nWHDy.WmW09YBEs9hP-RbJ\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"6194e084-ff4a-4e80-84ba-aa849b1b757d\",\n                    \"meeting_id\": \"4FScFDP+T0KHJCVxdqaW8g==\",\n                    \"recording_start\": \"2022-06-28T06:00:49Z\",\n                    \"recording_end\": \"2022-06-28T08:34:46Z\",\n                    \"file_type\": \"CHAT\",\n                    \"file_extension\": \"TXT\",\n                    \"file_size\": 2146,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/N2idtelqU8wu9nZ3X6oCj6p69XqyXDq0pBDnxfbo23s51zknWFp9Ft13514mtb4J_phJ4i_-q74Wj7M6.X7mOoTeejmh0tFkq\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/N2idtelqU8wu9nZ3X6oCj6p69XqyXDq0pBDnxfbo23s51zknWFp9Ft13514mtb4J_phJ4i_-q74Wj7M6.X7mOoTeejmh0tFkq\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"chat_file\"\n                },\n                {\n                    \"id\": \"ff0e6de2-8c25-4e68-a50c-8e8b718b32d6\",\n                    \"meeting_id\": \"4FScFDP+T0KHJCVxdqaW8g==\",\n                    \"recording_start\": \"2022-06-28T06:00:49Z\",\n                    \"recording_end\": \"2022-06-28T08:34:46Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 588819020,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/iV9B6XT8c-Aei04NujexhwVogPH-FfOikVcIImJk8b3hXc3C2Qriw8ZAtEE8IzhhzozzsHgBO4fP7KD8.SdWLWO02fVmb1BHg\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/iV9B6XT8c-Aei04NujexhwVogPH-FfOikVcIImJk8b3hXc3C2Qriw8ZAtEE8IzhhzozzsHgBO4fP7KD8.SdWLWO02fVmb1BHg\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"q3ls0XAeEFmnNQuCtTWfiBO7jLSwl63z\"\n        },\n        {\n            \"uuid\": \"EHJeWrFcRGOzTRHQI/wSvg==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-28T01:57:03Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 139,\n            \"total_size\": 636478192,\n            \"recording_count\": 3,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/mJZbfGt1oplFeoT9X2X_uP1rJ4ttQZUmSJh3WfLp8gIeSt6B7VCRdZSrbQfHueU-.t5e6oTUt8PAIgVVV\",\n            \"recording_files\": [\n                {\n                    \"id\": \"06f821bd-bf97-4548-8f63-470cc30637e1\",\n                    \"meeting_id\": \"EHJeWrFcRGOzTRHQI/wSvg==\",\n                    \"recording_start\": \"2022-06-28T02:05:11Z\",\n                    \"recording_end\": \"2022-06-28T04:24:39Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 133152811,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/7jhl1d_NZOzWHpgOqMCjVRweDNCkw8SRJjmyNKLfsBZ9l60hEX-PfJCm9OW1WqCrV0ugDMVfGokPixxA.6o9rUuAYdXsIMxnl\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/7jhl1d_NZOzWHpgOqMCjVRweDNCkw8SRJjmyNKLfsBZ9l60hEX-PfJCm9OW1WqCrV0ugDMVfGokPixxA.6o9rUuAYdXsIMxnl\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"591dd2ba-64a8-4407-a4db-6dc763f1bc0b\",\n                    \"meeting_id\": \"EHJeWrFcRGOzTRHQI/wSvg==\",\n                    \"recording_start\": \"2022-06-28T02:05:11Z\",\n                    \"recording_end\": \"2022-06-28T04:24:39Z\",\n                    \"file_type\": \"CHAT\",\n                    \"file_extension\": \"TXT\",\n                    \"file_size\": 90,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/jVgdOD7WS5ptv6AXTz5TAn29TG8W31yHDFLDuczYszfwhbYpQ2ugVgmpK0RfQmffItQDQoaimCN9qwg.72Fhj-enArdaGSxT\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/jVgdOD7WS5ptv6AXTz5TAn29TG8W31yHDFLDuczYszfwhbYpQ2ugVgmpK0RfQmffItQDQoaimCN9qwg.72Fhj-enArdaGSxT\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"chat_file\"\n                },\n                {\n                    \"id\": \"83c73eb9-4cd9-42a7-b857-8229ff11eaee\",\n                    \"meeting_id\": \"EHJeWrFcRGOzTRHQI/wSvg==\",\n                    \"recording_start\": \"2022-06-28T02:05:11Z\",\n                    \"recording_end\": \"2022-06-28T04:24:39Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 503325291,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/ys94pxZpzfgkHnclZYskYXTgLEFCOtSFHBpZs9n6yDHMUAlyLfSGHsv8_QxMOQhU7p43x8xxCaR95U3I.VP61WYbq2UczmtT4\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/ys94pxZpzfgkHnclZYskYXTgLEFCOtSFHBpZs9n6yDHMUAlyLfSGHsv8_QxMOQhU7p43x8xxCaR95U3I.VP61WYbq2UczmtT4\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"T6XjDEMjA5x3s13ZORrHXSWYehQeg8Tk\"\n        },\n        {\n            \"uuid\": \"NsqAtb3cQa6E3IbRV6vRZg==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-24T01:41:08Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 121,\n            \"total_size\": 377781120,\n            \"recording_count\": 3,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/2p3gR6vK_tz5qwd2zQgCqCjKMGHbxeVmcdSstEyz0Xkf64Y2vLrPiAIUGnHxUh9x.UlwEgDP6xnKZS0V3\",\n            \"recording_files\": [\n                {\n                    \"id\": \"b289db8a-44b7-47da-90b9-c3051844fed7\",\n                    \"meeting_id\": \"NsqAtb3cQa6E3IbRV6vRZg==\",\n                    \"recording_start\": \"2022-06-24T02:03:33Z\",\n                    \"recording_end\": \"2022-06-24T04:04:53Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 261931278,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/FVp7dOWz54fvuI6jEKfuUx-GJ_v_Ow9G_e6qTCAI9z1o0DqhBXEPbiVjKmvgWRu4POKKkMXhjFYaVXY.1vuCUtJXS5UHtqEV\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/FVp7dOWz54fvuI6jEKfuUx-GJ_v_Ow9G_e6qTCAI9z1o0DqhBXEPbiVjKmvgWRu4POKKkMXhjFYaVXY.1vuCUtJXS5UHtqEV\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                },\n                {\n                    \"id\": \"d5790049-b343-46f0-8507-083ce6366085\",\n                    \"meeting_id\": \"NsqAtb3cQa6E3IbRV6vRZg==\",\n                    \"recording_start\": \"2022-06-24T02:03:33Z\",\n                    \"recording_end\": \"2022-06-24T04:04:53Z\",\n                    \"file_type\": \"CHAT\",\n                    \"file_extension\": \"TXT\",\n                    \"file_size\": 321,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/VPV1F04kGA3aXjGx-rctycHF-_9wC4oALRVvRLft4m8Lj67_83J82z-suVHZrG_Z2vh-bF7gH_hrB-05.blNO0WaEcbGHlrOh\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/VPV1F04kGA3aXjGx-rctycHF-_9wC4oALRVvRLft4m8Lj67_83J82z-suVHZrG_Z2vh-bF7gH_hrB-05.blNO0WaEcbGHlrOh\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"chat_file\"\n                },\n                {\n                    \"id\": \"d8c95422-b8b4-4be4-af04-88780bf38b6d\",\n                    \"meeting_id\": \"NsqAtb3cQa6E3IbRV6vRZg==\",\n                    \"recording_start\": \"2022-06-24T02:03:33Z\",\n                    \"recording_end\": \"2022-06-24T04:04:53Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 115849521,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/MYXDErM2U6Kkw7sHa4105IsLHR7FH-Kq3iDIMVfY1YTmZLecS6F19Jvul_dg8K99-5E9VjevObGs8x3J.k0soTqpvsmi3RoW6\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/MYXDErM2U6Kkw7sHa4105IsLHR7FH-Kq3iDIMVfY1YTmZLecS6F19Jvul_dg8K99-5E9VjevObGs8x3J.k0soTqpvsmi3RoW6\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                }\n            ],\n            \"recording_play_passcode\": \"3wQRnp1odyww3e-aE9m4f6EwH3bToJbB\"\n        },\n        {\n            \"uuid\": \"LQS3aX2VTQKVsojMN3RXDA==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-21T05:50:04Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 120,\n            \"total_size\": 583904478,\n            \"recording_count\": 3,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/_BcVNyzvHe1_BGm6mxIKVvu-DX8Za-MY4FYsm8ODB9CC7oPGxfMyqfF7GFyuGB6q.OVnI9XZPwVtrcO3Q\",\n            \"recording_files\": [\n                {\n                    \"id\": \"1660708e-4edf-4296-9741-1d24f7f7a0d9\",\n                    \"meeting_id\": \"LQS3aX2VTQKVsojMN3RXDA==\",\n                    \"recording_start\": \"2022-06-21T06:00:45Z\",\n                    \"recording_end\": \"2022-06-21T08:01:13Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 115020993,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/m0CmPdo5qEg09hr_vNc1akpoEfuNOQqZldvLvx7xXkAEN8r9X5u7-KhMv9BUKNiM9XDWVIqox7swFIR7.nLT-hUd960FgCQq_\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/m0CmPdo5qEg09hr_vNc1akpoEfuNOQqZldvLvx7xXkAEN8r9X5u7-KhMv9BUKNiM9XDWVIqox7swFIR7.nLT-hUd960FgCQq_\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"a95415c5-4e70-48b1-b815-ebbf717def4c\",\n                    \"meeting_id\": \"LQS3aX2VTQKVsojMN3RXDA==\",\n                    \"recording_start\": \"2022-06-21T06:00:45Z\",\n                    \"recording_end\": \"2022-06-21T08:01:13Z\",\n                    \"file_type\": \"CHAT\",\n                    \"file_extension\": \"TXT\",\n                    \"file_size\": 287,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/arBUguHJZJuHWwPaWO_nZMBmElP48zbhWuR7cLd4JCj1pv1xDrLqiPrrXMBIOV41ZxfksZhW38PxWKpQ.VEG-OvewvamcH986\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/arBUguHJZJuHWwPaWO_nZMBmElP48zbhWuR7cLd4JCj1pv1xDrLqiPrrXMBIOV41ZxfksZhW38PxWKpQ.VEG-OvewvamcH986\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"chat_file\"\n                },\n                {\n                    \"id\": \"f38b5705-f60a-4ee2-abd5-6d9780a490d9\",\n                    \"meeting_id\": \"LQS3aX2VTQKVsojMN3RXDA==\",\n                    \"recording_start\": \"2022-06-21T06:00:45Z\",\n                    \"recording_end\": \"2022-06-21T08:01:13Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 468883198,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/X0-MjeFeOUDF3zPOkzPJdOGjQ8jwKb56pN82XLDHNchEvkJpZmHhufuqcD-qqQdIcPpENlpOkcaSJjnm.CXxe7ZFJMSpQSyqO\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/X0-MjeFeOUDF3zPOkzPJdOGjQ8jwKb56pN82XLDHNchEvkJpZmHhufuqcD-qqQdIcPpENlpOkcaSJjnm.CXxe7ZFJMSpQSyqO\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"JEePHw84ztEyt0DEwFfKZFamMo2mTToR\"\n        },\n        {\n            \"uuid\": \"J6CZKlP/SLWB7cCQWWCoSw==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-21T01:56:32Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 162,\n            \"total_size\": 938271360,\n            \"recording_count\": 3,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/ioiwrLn7RvYUlJ5hZUi_WsqMOvBlUz9Tic0ZFioNdu7oDFwFHs4IgJgI4j0GBlZp.-tBjmEnmGRKGG1D0\",\n            \"recording_files\": [\n                {\n                    \"id\": \"17f1e9af-e446-42c8-83b7-5c0eac42a860\",\n                    \"meeting_id\": \"J6CZKlP/SLWB7cCQWWCoSw==\",\n                    \"recording_start\": \"2022-06-21T02:12:42Z\",\n                    \"recording_end\": \"2022-06-21T04:55:39Z\",\n                    \"file_type\": \"CHAT\",\n                    \"file_extension\": \"TXT\",\n                    \"file_size\": 617,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/lVxYGgnsHQSvcLZu0Os93UjpVM9FK84HElXY77DnD_LUrnaQRgQ0SRzo3p_kb3eUglL9OzTZC1LATX2Y.om52aV5hGouXDYJ1\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/lVxYGgnsHQSvcLZu0Os93UjpVM9FK84HElXY77DnD_LUrnaQRgQ0SRzo3p_kb3eUglL9OzTZC1LATX2Y.om52aV5hGouXDYJ1\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"chat_file\"\n                },\n                {\n                    \"id\": \"3014adbf-224d-4d87-81c4-eba43e541442\",\n                    \"meeting_id\": \"J6CZKlP/SLWB7cCQWWCoSw==\",\n                    \"recording_start\": \"2022-06-21T02:12:42Z\",\n                    \"recording_end\": \"2022-06-21T04:55:39Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 782675807,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/iIxk8XWtbJKT9yWIEZ8yPIX7pUOFXxLw45QF7UCaEi2-KATD0xpuOzschylIcOlWc1OGRfjkP13ICE-l.Jyj14AA_DtBHJmGc\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/iIxk8XWtbJKT9yWIEZ8yPIX7pUOFXxLw45QF7UCaEi2-KATD0xpuOzschylIcOlWc1OGRfjkP13ICE-l.Jyj14AA_DtBHJmGc\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                },\n                {\n                    \"id\": \"c8562fa6-50d5-429e-bb15-2578c946f7c2\",\n                    \"meeting_id\": \"J6CZKlP/SLWB7cCQWWCoSw==\",\n                    \"recording_start\": \"2022-06-21T02:12:42Z\",\n                    \"recording_end\": \"2022-06-21T04:55:39Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 155594936,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/5XV-lekaRG6W_pf-jK-t0h3NOVGQ4T_Eu6nqZhNcrDvEYrWWWlmecvo97mDDqLoFuN0paV_QKqMzYKVO.J59KQ7rCcmMDiyFX\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/5XV-lekaRG6W_pf-jK-t0h3NOVGQ4T_Eu6nqZhNcrDvEYrWWWlmecvo97mDDqLoFuN0paV_QKqMzYKVO.J59KQ7rCcmMDiyFX\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                }\n            ],\n            \"recording_play_passcode\": \"fujg4GgI1oqAy2lAh7vVW126YGjRbye3\"\n        },\n        {\n            \"uuid\": \"0y1IKPS1RLaAzYYJYJS05g==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-14T01:54:42Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 155,\n            \"total_size\": 617912565,\n            \"recording_count\": 2,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/QQWW8cQzEAjUptg20_e1mT7E20Cq3uO29P4EYYRm7lv6VnXNl5sxHQt_5jHVEvw_.SW4DE-YP6PSGTWLj\",\n            \"recording_files\": [\n                {\n                    \"id\": \"ca8c3031-8ee7-4b80-bbb8-445c26a8c17e\",\n                    \"meeting_id\": \"0y1IKPS1RLaAzYYJYJS05g==\",\n                    \"recording_start\": \"2022-06-14T02:00:39Z\",\n                    \"recording_end\": \"2022-06-14T04:35:46Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 148112030,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/X_KupGlqv-hOAlN-A87scGrp4Q_dkRWLVId5QBdSpfGZh41wAMKzE0OBfu70KlLHiwENtmF3U60auziM.wnYM3DG_eNimVwYI\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/X_KupGlqv-hOAlN-A87scGrp4Q_dkRWLVId5QBdSpfGZh41wAMKzE0OBfu70KlLHiwENtmF3U60auziM.wnYM3DG_eNimVwYI\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"eb174dfb-e83b-4608-9115-46dc4cb613cb\",\n                    \"meeting_id\": \"0y1IKPS1RLaAzYYJYJS05g==\",\n                    \"recording_start\": \"2022-06-14T02:00:39Z\",\n                    \"recording_end\": \"2022-06-14T04:35:46Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 469800535,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/5gwL4TorWwrfDMPkf-NxZKUfvdtKDQYbt3cwRl44SsTLyPRPRr8KiO4yHkUAqxsWqr8Jd_lF0juCFz_4.qTz_DLpsM-gnS37Y\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/5gwL4TorWwrfDMPkf-NxZKUfvdtKDQYbt3cwRl44SsTLyPRPRr8KiO4yHkUAqxsWqr8Jd_lF0juCFz_4.qTz_DLpsM-gnS37Y\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"S-J4Hu3isDmxqii0OuGfQrJMS3ssvoHr\"\n        },\n        {\n            \"uuid\": \"kWgtI+0MSvu3zstekMunpg==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-06-10T01:56:33Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 96,\n            \"total_size\": 335300720,\n            \"recording_count\": 2,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/L6Iv-5I2XxFmMjm8bKvdJq1OtBZELenUQQqDW57jvjbcR9vLtFeF-UUdZ0BmtAgG.uk0gYvq0FQrrPAay\",\n            \"recording_files\": [\n                {\n                    \"id\": \"0619364f-05ba-4daa-9d0e-963494da321f\",\n                    \"meeting_id\": \"kWgtI+0MSvu3zstekMunpg==\",\n                    \"recording_start\": \"2022-06-10T02:00:44Z\",\n                    \"recording_end\": \"2022-06-10T03:37:15Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 92160227,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/bK-lqOKxNw8WJJOSX7hj_jE3AVUrkwwM1qlyFfr_fBTP2F-Df8ktoB8_lW4Hnnn-TGkzW9sbZnmWUfA.-VKtPM2d8HMzgp_l\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/bK-lqOKxNw8WJJOSX7hj_jE3AVUrkwwM1qlyFfr_fBTP2F-Df8ktoB8_lW4Hnnn-TGkzW9sbZnmWUfA.-VKtPM2d8HMzgp_l\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"e0bfe09c-86aa-4d7e-acc4-fe2153e9b255\",\n                    \"meeting_id\": \"kWgtI+0MSvu3zstekMunpg==\",\n                    \"recording_start\": \"2022-06-10T02:00:44Z\",\n                    \"recording_end\": \"2022-06-10T03:37:15Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 243140493,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/Y3tdoNj6YmhwLpkFcV2SnMDoNHLE_NEsnlVg8szkl1qwl-ILQppRB3HEXRh79YJYEaXUWrqVXEjPWIro.vLO_VYW9q9lDlf52\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/Y3tdoNj6YmhwLpkFcV2SnMDoNHLE_NEsnlVg8szkl1qwl-ILQppRB3HEXRh79YJYEaXUWrqVXEjPWIro.vLO_VYW9q9lDlf52\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"f5ZtOhewxMm9rF7YkULLuCPWSS88slwu\"\n        },\n        {\n            \"uuid\": \"Dyvo5fHxRMONXjpVhnOaaw==\",\n            \"id\": 2702700415,\n            \"account_id\": \"B1p6wgRSRMibOx8aoe9jYQ\",\n            \"host_id\": \"Gm-YB4KkSgmQlewn45SHGA\",\n            \"topic\": \"Room - Open Minded's Personal Meeting Room\",\n            \"type\": 4,\n            \"start_time\": \"2022-05-31T01:58:01Z\",\n            \"timezone\": \"Asia/Taipei\",\n            \"duration\": 101,\n            \"total_size\": 476022962,\n            \"recording_count\": 2,\n            \"share_url\": \"https://us02web.zoom.us/rec/share/uCMUKFi1l-STvRjss37rDrvGRAcL-MfgTvH5fkhIzsa45AWtf5dAwUanrXzDzeS-.d7PDYLCVyS1D-bBr\",\n            \"recording_files\": [\n                {\n                    \"id\": \"22edbbef-840d-45ac-89e3-0c4dbf655f8f\",\n                    \"meeting_id\": \"Dyvo5fHxRMONXjpVhnOaaw==\",\n                    \"recording_start\": \"2022-05-31T02:00:56Z\",\n                    \"recording_end\": \"2022-05-31T03:42:27Z\",\n                    \"file_type\": \"M4A\",\n                    \"file_extension\": \"M4A\",\n                    \"file_size\": 96936574,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/S8pyDYlosNJy7EiWCbNW_x4_1ZGWC7pSHIP9GPXvlYMn6bySpiuENgbVAZXohGZVmBGhoa3xCvZANf8s.LzhPCWehrzRTba3l\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/S8pyDYlosNJy7EiWCbNW_x4_1ZGWC7pSHIP9GPXvlYMn6bySpiuENgbVAZXohGZVmBGhoa3xCvZANf8s.LzhPCWehrzRTba3l\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"audio_only\"\n                },\n                {\n                    \"id\": \"ab2d976c-e561-49f9-aa37-4cc1f2fb5678\",\n                    \"meeting_id\": \"Dyvo5fHxRMONXjpVhnOaaw==\",\n                    \"recording_start\": \"2022-05-31T02:00:56Z\",\n                    \"recording_end\": \"2022-05-31T03:42:27Z\",\n                    \"file_type\": \"MP4\",\n                    \"file_extension\": \"MP4\",\n                    \"file_size\": 379086388,\n                    \"play_url\": \"https://us02web.zoom.us/rec/play/mlFzEGWymSAnA89u0hRuJuTNXfvvPcteV1gY_6muA2Ohesu3K7Rjx1Uouu4kM8P5BtZE3o4p4RXi-rQU.npwvmYw0erdYYXFc\",\n                    \"download_url\": \"https://us02web.zoom.us/rec/download/mlFzEGWymSAnA89u0hRuJuTNXfvvPcteV1gY_6muA2Ohesu3K7Rjx1Uouu4kM8P5BtZE3o4p4RXi-rQU.npwvmYw0erdYYXFc\",\n                    \"status\": \"completed\",\n                    \"recording_type\": \"shared_screen_with_speaker_view\"\n                }\n            ],\n            \"recording_play_passcode\": \"Vz2DdZRrhdl57AYbyA52l4oSvvcjzcne\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "Zoom Meeting Request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.zoom.us/v2/users/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"zoom",
+								"us"
+							],
+							"path": [
+								"v2",
+								"users",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 01 Jun 2023 05:09:52 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "9463"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "x-zm-trackingid",
+							"value": "v=2.0;clid=us02;rid=WEB_b68f64ce62854398a14483fa4abaaa72"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, must-revalidate, no-transform"
+						},
+						{
+							"key": "pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "expires",
+							"value": "Thu, 01 Jan 1970 00:00:00 GMT"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_aid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_haid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_tmaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "zm_htmaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "cred=E36B13ABF5D4FC1DE18FA541D6A439CC; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "_zm_ctaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "_zm_chtaid=\"\"; Domain=.zoom.us; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly"
+						},
+						{
+							"key": "set-cookie",
+							"value": "TS01f92dc5=019f2012ca82c5667c33407524b41ba656c871ee24da787f117319a9a704876b5bafd5fc8f23e264774251de2ca06cbf9783c45f7a; Path=/; Secure; HttpOnly; SameSite=Strict;"
+						},
+						{
+							"key": "set-cookie",
+							"value": "TS018dd1ba=019f2012ca82c5667c33407524b41ba656c871ee24da787f117319a9a704876b5bafd5fc8f23e264774251de2ca06cbf9783c45f7a; path=/; domain=.zoom.us"
+						},
+						{
+							"key": "vary",
+							"value": "Origin"
+						},
+						{
+							"key": "vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "x-ratelimit-category",
+							"value": "Medium"
+						},
+						{
+							"key": "x-zm-zoneid",
+							"value": "VA"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "referrer-policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "CF-Cache-Status",
+							"value": "DYNAMIC"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=RkqNKwlCpV8TeFdFN5bzUloqzGCqLS5HTdntYSloEbUf%2FkSblqxPmNUTvvvJjPAH%2BwJQc9H4P7jd7BNJn2Pv6F%2BKY7u2bI6vhDkwdatzYQeSzxgs5QWPNu0wvTvA\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7d04f267fa910654-IAD"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"page_count\": 1,\n    \"page_number\": 1,\n    \"page_size\": 30,\n    \"total_records\": 19,\n    \"next_page_token\": \"\",\n    \"users\": [\n        {\n            \"id\": \"5xFG6OOSTUCyrWixEAjxTQ\",\n            \"first_name\": \"HR\",\n            \"last_name\": \"Tomofun\",\n            \"display_name\": \"HR Tomofun\",\n            \"email\": \"hr_zoom@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702708801,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"HR\",\n            \"created_at\": \"2022-08-23T02:57:54Z\",\n            \"last_login_time\": \"2022-09-02T06:09:22Z\",\n            \"last_client_version\": \"5.11.6.9890(mac)\",\n            \"language\": \"zh-TW\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2022-08-22T09:26:03Z\"\n        },\n        {\n            \"id\": \"6HUwNg6lQLuY4D6ZyOn2DQ\",\n            \"first_name\": \"Rupa\",\n            \"last_name\": \"Huang\",\n            \"display_name\": \"Rupa Huang\",\n            \"email\": \"pm@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702707890,\n            \"timezone\": \"\",\n            \"verified\": 1,\n            \"dept\": \"PM\",\n            \"created_at\": \"2021-10-08T06:52:51Z\",\n            \"last_login_time\": \"2021-10-08T06:52:51Z\",\n            \"language\": \"zh-TW\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2021-10-08T03:07:46Z\"\n        },\n        {\n            \"id\": \"bX38VsxLTlG57Ml1xutHpQ\",\n            \"first_name\": \"Cammy\",\n            \"last_name\": \"Lin\",\n            \"display_name\": \"Cammy Lin\",\n            \"email\": \"cammy@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 9346034799,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"PM\",\n            \"created_at\": \"2017-09-18T05:46:42Z\",\n            \"last_login_time\": \"2023-05-19T01:26:30Z\",\n            \"last_client_version\": \"5.13.11.13434(win)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/bX38VsxLTlG57Ml1xutHpQ/fe6cd4d7-0ec3-4577-bd3c-68ce434e6353-7622\",\n            \"language\": \"\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2017-09-18T05:46:42Z\"\n        },\n        {\n            \"id\": \"HD5LDJyBQj6DIUg3aNAWoA\",\n            \"first_name\": \"Tomofun\",\n            \"last_name\": \"IT\",\n            \"display_name\": \"Tomofun IT\",\n            \"email\": \"it@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 3102708358,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"\",\n            \"created_at\": \"2016-02-07T02:38:59Z\",\n            \"last_login_time\": \"2023-06-01T05:08:54Z\",\n            \"last_client_version\": \"5.12.9.13190(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/HD5LDJyBQj6DIUg3aNAWoA/0df7cc9d-73c7-4a8c-86ef-d2e7c8ee28be-3302\",\n            \"language\": \"en-US\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"0\",\n            \"user_created_at\": \"2016-02-06T08:09:05Z\"\n        },\n        {\n            \"id\": \"hKJDp5SbRA-TCwDFP6b2tQ\",\n            \"first_name\": \"Tomofun\",\n            \"last_name\": \"HR\",\n            \"display_name\": \"Tomofun HR\",\n            \"email\": \"hr@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702702716,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"HR\",\n            \"created_at\": \"2021-01-25T03:26:33Z\",\n            \"last_login_time\": \"2022-08-23T06:18:53Z\",\n            \"pic_url\": \"https://lh3.googleusercontent.com/a-/AFdZucq79DoYa8hBmJUL7gAwI-xNbX26FGjvQEy9iFkSXA=s96-c\",\n            \"language\": \"zh-TW\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2021-01-25T03:14:21Z\"\n        },\n        {\n            \"id\": \"JbxO25woR0mEgzU-LJrY7w\",\n            \"first_name\": \"ai\",\n            \"last_name\": \"comp2021\",\n            \"display_name\": \"ai comp2021\",\n            \"email\": \"ai_comp2021@tomofun.com\",\n            \"type\": 1,\n            \"pmi\": 6999693401,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"AI\",\n            \"created_at\": \"2021-06-24T09:04:36Z\",\n            \"last_login_time\": \"2021-07-19T01:30:54Z\",\n            \"last_client_version\": \"5.4.59931.0110(mac)\",\n            \"pic_url\": \"https://lh3.googleusercontent.com/a-/AOh14GjmqoCTNQvAvQFRPL43efqCWtJMUWyjQ0wiJBsa=s96-c\",\n            \"language\": \"zh-TW\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2021-06-24T09:03:53Z\"\n        },\n        {\n            \"id\": \"kFBGwCKBSu-urVQKsJELrw\",\n            \"first_name\": \"Claire\",\n            \"last_name\": \"Cheng\",\n            \"display_name\": \"Claire Cheng\",\n            \"email\": \"claire@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702700706,\n            \"timezone\": \"\",\n            \"verified\": 0,\n            \"dept\": \"MKT\",\n            \"created_at\": \"2018-05-16T04:25:55Z\",\n            \"last_login_time\": \"2023-05-31T07:35:18Z\",\n            \"last_client_version\": \"5.13.11.16405(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/kFBGwCKBSu-urVQKsJELrw/d2e00763-22cf-4406-bf79-49ee625136cc-5669\",\n            \"language\": \"zh-TW\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2018-05-16T04:25:55Z\"\n        },\n        {\n            \"id\": \"nJGI12QNTWel1Np5xYr4aw\",\n            \"first_name\": \"Maggie\",\n            \"last_name\": \"Cheung\",\n            \"display_name\": \"Maggie Cheung\",\n            \"email\": \"maggie@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702702277,\n            \"timezone\": \"Asia/Hong_Kong\",\n            \"verified\": 1,\n            \"dept\": \"MKT\",\n            \"created_at\": \"2016-01-20T05:34:52Z\",\n            \"last_login_time\": \"2023-05-05T01:36:36Z\",\n            \"last_client_version\": \"5.14.6.7893(iphone)\",\n            \"language\": \"en-US\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2016-01-20T05:29:22Z\"\n        },\n        {\n            \"id\": \"pi-EOLuWTzSaBMcjTS7YOw\",\n            \"first_name\": \"Phoebe\",\n            \"last_name\": \"Chu\",\n            \"display_name\": \"Phoebe chu\",\n            \"email\": \"phoebe@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 6599892968,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"HR\",\n            \"created_at\": \"2019-05-07T16:00:55Z\",\n            \"last_login_time\": \"2023-06-01T03:27:51Z\",\n            \"last_client_version\": \"5.14.7.8043(iphone)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/pi-EOLuWTzSaBMcjTS7YOw/e5de023c-fba3-4fda-b929-07bb5fa5d57c-4691\",\n            \"language\": \"zh-TW\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2019-05-07T16:00:55Z\"\n        },\n        {\n            \"id\": \"po_eXA9cQaGfJ2lRf-YcYA\",\n            \"first_name\": \"EU\",\n            \"last_name\": \"Team\",\n            \"display_name\": \"EU Team\",\n            \"email\": \"eu_team@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702705249,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"\",\n            \"created_at\": \"2020-06-17T07:30:32Z\",\n            \"last_login_time\": \"2022-09-13T05:59:19Z\",\n            \"last_client_version\": \"5.11.6.9890(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/po_eXA9cQaGfJ2lRf-YcYA/c822cad6-a8a0-46c6-9e30-6dc7a57f918b-8409\",\n            \"language\": \"en-US\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2020-06-17T04:23:50Z\"\n        },\n        {\n            \"id\": \"qg_CIqJFQCeJlnJILg41_A\",\n            \"first_name\": \"Zoe\",\n            \"last_name\": \"Lin\",\n            \"display_name\": \"Zoe Lin\",\n            \"email\": \"zoe@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702705281,\n            \"timezone\": \"Asia/Tokyo\",\n            \"verified\": 0,\n            \"created_at\": \"2016-06-30T03:54:39Z\",\n            \"last_login_time\": \"2023-05-16T23:59:22Z\",\n            \"last_client_version\": \"5.13.11.13434(win)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/qg_CIqJFQCeJlnJILg41_A/977296ee-b9d5-4610-982b-31345ed076fc-8030\",\n            \"language\": \"jp-JP\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2016-06-23T00:53:48Z\"\n        },\n        {\n            \"id\": \"rixyQ-EQQv6rkHfCqGnrSg\",\n            \"first_name\": \"Nobel\",\n            \"last_name\": \"Hsu\",\n            \"display_name\": \"Nobel Hsu\",\n            \"email\": \"nobel@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702703168,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"RD\",\n            \"created_at\": \"2019-11-19T04:30:54Z\",\n            \"last_login_time\": \"2023-06-01T02:28:08Z\",\n            \"last_client_version\": \"5.13.11.16405(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/rixyQ-EQQv6rkHfCqGnrSg/07e1e1e4-3f6c-4058-aef6-66c14b1a5526-8505\",\n            \"language\": \"zh-TW\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2019-11-19T04:30:54Z\"\n        },\n        {\n            \"id\": \"rjI9fjHqTO2M75oU2SCppg\",\n            \"first_name\": \"Tomofun PH\",\n            \"last_name\": \"Recruitment\",\n            \"display_name\": \"Tomofun PH Recruitment\",\n            \"email\": \"careers.ph@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 7739280465,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"CS\",\n            \"created_at\": \"2022-02-11T08:47:53Z\",\n            \"last_login_time\": \"2023-06-01T03:01:26Z\",\n            \"last_client_version\": \"5.14.7.8043(iphone)\",\n            \"language\": \"en-US\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2022-02-11T08:44:01Z\"\n        },\n        {\n            \"id\": \"tU7KTf9dQ1KNz6OsUnghOw\",\n            \"first_name\": \"JP\",\n            \"last_name\": \"Team\",\n            \"display_name\": \"JP_Team\",\n            \"email\": \"jp_team@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702700121,\n            \"timezone\": \"Asia/Tokyo\",\n            \"verified\": 1,\n            \"dept\": \"\",\n            \"created_at\": \"2022-04-21T01:10:39Z\",\n            \"language\": \"\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2017-08-24T06:02:05Z\"\n        },\n        {\n            \"id\": \"u9czDcxMSPq-yzoTiS9WUQ\",\n            \"first_name\": \"Bonnie\",\n            \"last_name\": \"Chien\",\n            \"display_name\": \"Bonnie Chien\",\n            \"email\": \"bonniechieh@gmail.com\",\n            \"type\": 1,\n            \"pmi\": 9885794294,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"IT\",\n            \"created_at\": \"2022-08-03T03:05:19Z\",\n            \"last_login_time\": \"2023-05-31T01:30:03Z\",\n            \"last_client_version\": \"5.13.11.16405(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/u9czDcxMSPq-yzoTiS9WUQ/ed50bd0e-7c5b-46ff-baf1-0ef1380fb0fb-9775\",\n            \"language\": \"zh-TW\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"1\",\n            \"user_created_at\": \"2022-08-03T03:05:19Z\"\n        },\n        {\n            \"id\": \"wjM6FD29TSe1mKV3fGSjkg\",\n            \"first_name\": \"Support\",\n            \"last_name\": \"Tomofun\",\n            \"display_name\": \"Furbo Support\",\n            \"email\": \"support@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2438172195,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"CS\",\n            \"created_at\": \"2021-04-30T04:30:04Z\",\n            \"last_login_time\": \"2023-02-22T23:48:27Z\",\n            \"last_client_version\": \"5.12.9.13190(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/wjM6FD29TSe1mKV3fGSjkg/3ff7d37b-c948-48d2-87a6-231dde83db17-7631\",\n            \"language\": \"en-US\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2021-04-30T04:30:04Z\"\n        },\n        {\n            \"id\": \"wxIKWmLGQHC1xfC2R8Jw0g\",\n            \"first_name\": \"Yi An\",\n            \"last_name\": \"Chang\",\n            \"display_name\": \"Yi An Chang\",\n            \"email\": \"tina@tomofun.com\",\n            \"type\": 1,\n            \"pmi\": 5067633329,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 1,\n            \"dept\": \"IT\",\n            \"created_at\": \"2020-01-22T03:15:59Z\",\n            \"last_login_time\": \"2023-05-31T00:37:27Z\",\n            \"last_client_version\": \"5.14.8.16213(win)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/wxIKWmLGQHC1xfC2R8Jw0g/a9b5b9b6-f2d1-4516-b9fa-1202d957b5c5-9190\",\n            \"language\": \"en-US\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"1\",\n            \"user_created_at\": \"2020-01-22T03:15:13Z\"\n        },\n        {\n            \"id\": \"xVVy1TgNRImyNZwM-sZCTg\",\n            \"first_name\": \"Pai\",\n            \"last_name\": \"Hsueh\",\n            \"display_name\": \"Pai Hsueh\",\n            \"email\": \"pai@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 9543555383,\n            \"timezone\": \"Asia/Taipei\",\n            \"verified\": 0,\n            \"dept\": \"PM\",\n            \"created_at\": \"2020-01-22T03:37:33Z\",\n            \"last_login_time\": \"2023-06-01T02:31:34Z\",\n            \"last_client_version\": \"5.14.7.8043(iphone)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/xVVy1TgNRImyNZwM-sZCTg/3f776364-d43b-4717-b71c-fbc1407a8262-637\",\n            \"language\": \"zh-TW\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2019-06-10T00:31:09Z\"\n        },\n        {\n            \"id\": \"YAXjy6tFSfWUZUEIhE3pOw\",\n            \"first_name\": \"Connie\",\n            \"last_name\": \"Tseng\",\n            \"display_name\": \"Connie Tseng\",\n            \"email\": \"connie@tomofun.com\",\n            \"type\": 2,\n            \"pmi\": 2702702020,\n            \"timezone\": \"\",\n            \"verified\": 1,\n            \"dept\": \"MKT\",\n            \"created_at\": \"2016-10-21T03:41:02Z\",\n            \"last_login_time\": \"2023-05-26T07:25:55Z\",\n            \"last_client_version\": \"5.13.11.16405(mac)\",\n            \"pic_url\": \"https://us02web.zoom.us/p/YAXjy6tFSfWUZUEIhE3pOw/5af302d3-3be3-4886-be49-6117daefb796-6533\",\n            \"language\": \"\",\n            \"phone_number\": \"\",\n            \"status\": \"active\",\n            \"role_id\": \"2\",\n            \"user_created_at\": \"2016-10-21T03:40:00Z\"\n        }\n    ]\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenType",
+				"value": "bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJzdiI6IjAwMDAwMSIsImFsZyI6IkhTNTEyIiwidiI6IjIuMCIsImtpZCI6ImVmNWJhYThiLTU3MDItNDY0My05MzVlLTFjMDQ5NWEzYzc1MSJ9.eyJ2ZXIiOjksImF1aWQiOiJjNTVhYzg2MTdjMzgwZGZiODQ4YTRjNGMyZjY2MjJjMCIsImNvZGUiOiJldlZHTWtFM2JWbEpjenFFQlR1VGx1d3Ria1AwblB3UWciLCJpc3MiOiJ6bTpjaWQ6STdJWkY5azNRWkdlZ0JrRUJUNlgxZyIsImdubyI6MCwidHlwZSI6MCwidGlkIjowLCJhdWQiOiJodHRwczovL29hdXRoLnpvb20udXMiLCJ1aWQiOiJIRDVMREp5QlFqNkRJVWczYU5BV29BIiwibmJmIjoxNjg2MjE0NjQxLCJleHAiOjE2ODYyMTgyNDEsImlhdCI6MTY4NjIxNDY0MSwiYWlkIjoiQjFwNndnUlNSTWliT3g4YW9lOWpZUSJ9.XxSMFp6wKT_xKxr-P1_oEmTgUY7y8Iz99PL22goNNntVt4d2Ms1-nJZI_Ixlm07j8bRy1w2cXCNPc_oCjipHuA",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": true,
+				"type": "boolean"
+			},
+			{
+				"key": "tokenName",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "l8ZaXnYaFh4pDFuWDtJAay24Ecihjwq7",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "I7IZF9k3QZGegBkEBT6X1g",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://zoom.us/oauth/authorize",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://zoom.us/oauth/token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "users_json",
+			"value": ""
+		},
+		{
+			"key": "email_",
+			"value": ""
+		},
+		{
+			"key": "from_date_",
+			"value": ""
+		},
+		{
+			"key": "to_date_",
+			"value": ""
+		}
+	]
+}
