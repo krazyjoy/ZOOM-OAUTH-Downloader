@@ -31,8 +31,7 @@ You can choose to write your own local server or edit the one provided below as 
 ## Steps To Use
 1. Put all the requests you want to write the responses for, under this collection.
  
-2. Clone the following repository to your machine - https://github.com/sivcan/ResponseToFile-Postman or use the following command - `git clone https://github.com/sivcan/ResponseToFile-Postman`
-
+2. Clone the directory.
 3. Navigate into the directory and install the dependencies. Use the following command: `npm i` 
 
 4. Run the local server. Use the following command: `node script.js`
