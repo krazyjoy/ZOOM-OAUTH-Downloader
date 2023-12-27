@@ -1,6 +1,6 @@
 ## Steps of implementation
 
-### 
+### Register Zoom Oauth APP
 - location: Zoom app marketplace
 1. Create a new "OAUTH" application (e.g. Postman ZOOM)
     App Credentials:
@@ -12,8 +12,7 @@
        - Subdomain Check (closed)
        - Add allow lists
          - `https://oauth.pstmn.io/v1/browser-callback`
-         - `https://oauth.pstmn.io/v1/callback` (local posrtman)
-         - 
+         - `https://oauth.pstmn.io/v1/callback` (local postman)
 
 2. Feature
    Token:
@@ -24,4 +23,7 @@
    e.g. open scopes needed
    - View all user meetings (/meeting:read:admin)
    - View and manage all user meetings (/meeting:write:admin)
-   - 
+
+
+### Use Postman Callback URL in Collections
+
